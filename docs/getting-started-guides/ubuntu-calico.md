@@ -74,16 +74,13 @@ We'll use the `kubelet` to bootstrap the Kubernetes master processes as containe
 1.) Download and install the `kubelet` and `kubectl` binaries.
 
 ```
-# Get the Kubernetes Release.
-wget https://github.com/kubernetes/kubernetes/releases/download/v1.1.2/kubernetes.tar.gz
-
-# Extract the Kubernetes binaries.
-tar -xf kubernetes.tar.gz
-tar -xf kubernetes/server/kubernetes-server-linux-amd64.tar.gz
+# Get the Kubernetes binaries
+wget http://storage.googleapis.com/kubernetes-release/release/v1.1.2/bin/linux/amd64/kubectl
+wget http://storage.googleapis.com/kubernetes-release/release/v1.1.2/bin/linux/amd64/kubelet
 
 # Install the `kubelet` and `kubectl` binaries.
-sudo cp -f kubernetes/server/bin/kubelet /usr/bin
-sudo cp -f kubernetes/server/bin/kubectl /usr/bin
+sudo cp -f kubelet /usr/bin
+sudo cp -f kubectl /usr/bin
 ```
 
 2.) Install the `kubelet` systemd unit file and start the `kubelet`.
@@ -99,7 +96,7 @@ sudo systemctl enable /etc/systemd/kubelet.service
 sudo systemctl start kubelet.service
 ```
 
-3.) Start the other Kubernetes master services using the provided manifest.
+3.) Start the other Kubernetes master services using the provided manifest. 
 
 ```
 # Install the provided manifest
@@ -107,7 +104,7 @@ sudo mkdir -p /etc/kubernetes/manifests
 sudo cp -f calico-kubernetes-master/config/master/kubernetes-master.manifest /etc/kubernetes/manifests
 ```
 
-You should see the `apiserver`, `controller-manager` and `scheduler` containers running.  It may take some time to download the docker images - you can check if the containers are running using `docker ps`.
+Kubernetes will spot the new file and act on it automatically. You should see the `apiserver`, `controller-manager` and `scheduler` containers running.  It may take some time to download the docker images - you can check if the containers are running using `docker ps`.
 
 ### Install Calico on Master
 
@@ -125,12 +122,9 @@ Now, install Calico.  We'll need the `calicoctl` tool to do this.
 
 ```
 # Install the `calicoctl` binary
-wget https://github.com/projectcalico/calico-docker/releases/download/v0.9.0/calicoctl
+wget http://www.projectcalico.org/latest/calicoctl
 chmod +x calicoctl
 sudo mv calicoctl /usr/bin
-
-# Fetch the calico/node container
-sudo docker pull calico/node:v0.9.0
 
 # Install, enable, and start the Calico service
 sudo cp -f calico-kubernetes-master/config/master/calico-node.service /etc/systemd
@@ -171,12 +165,9 @@ We'll install Calico using the provided `calico-node.service` systemd unit file.
 
 ```
 # Install the `calicoctl` binary
-wget https://github.com/projectcalico/calico-docker/releases/download/v0.9.0/calicoctl
+wget http://www.projectcalico.org/latest/calicoctl
 chmod +x calicoctl
 sudo mv calicoctl /usr/bin
-
-# Fetch the calico/node container
-sudo docker pull calico/node:v0.9.0
 
 # Install, enable, and start the Calico service
 sudo cp -f calico-kubernetes-master/config/node/calico-node.service /etc/systemd
